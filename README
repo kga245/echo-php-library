@@ -4,6 +4,10 @@ Requirements:
 PHP
 Echo API key
 
+Make use of:
+ActivityStreams PHP Library (optional) - http://github.com/jonnyjon/ActivityStreams-PHP-Library
+SimplePie Library (optional) - http://simplepie.org/
+
 Usage:
 
 // Submit Data to Echo Platform
