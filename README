@@ -1,0 +1,21 @@
+A php library for interacting with the Echo platform. This library includes Echo API methods, OAuth authetication, a web GUI, and convert RSS to ActivityStreams functions.
+
+Requirements:
+PHP
+Echo API key
+
+Usage:
+
+// Submit Data to Echo Platform
+require ('/lib/EchoLib.inc');
+$EchoLib = new EchoLib($consumer_key, $consumer_secret); // create object
+$rsp = $EchoLib->method_submit($data); // submit ActivityStreams data to the Echo platform
+
+// Convert RSS to ActivityStreams
+require ('/lib/EchoLib.inc');
+
+$data = file_get_contents('http://search.twitter.com/search.atom?q=star+trek'); // get rss/atom data
+$streamy = new ActivityStreams(); // create object
+$rsp = $streamy->rss_to_activity_streams($data); // convert data
+header('Content-Type: application/xml; charset=utf-8'); // set the content type
+echo $rsp; // convert to string and print to screen

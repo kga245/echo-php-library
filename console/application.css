@@ -1,0 +1,158 @@
+body {
+	font-family:Arial, Helvetica, sans-serif;
+	min-width:800px;
+	font-size:14px;
+}
+
+p {
+	margin-bottom:10px	
+}
+
+.header {
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+background: url(images/3ones.gif) no-repeat 10px 10px #ee1c24;
+margin-top: 20px;
+height: 60px;
+}
+
+.title {
+	padding: 17px 0px;
+}
+
+.title h1 {
+	font-size: 2em;
+}
+
+h3 {
+font-size:1.5em;
+line-height:1;
+margin-bottom:0.5em;
+}
+
+.contact_link {
+	float:right;
+	margin: 20px 20px 0px 0px;
+	color: #fff;
+	text-decoration: none;
+}
+
+.contact_link:hover {
+background: #fff;
+color: #ee1c24;
+}
+
+.page {
+	background:url(images/background.gif) repeat top left;
+	border-top: 1px solid #CCC;
+	border-bottom: 1px solid #ccc;
+	padding-top: 19px;
+	padding-bottom: 20px;
+}
+
+.response {
+background-color:#FFFFFF;
+border:2px solid #CCCCCC;
+padding:10px;
+}
+
+#method-container {
+	float:left;
+	width:150px;
+	margin-right:10px;
+}
+
+
+
+#method-output {
+float:left;
+/*margin-right:10px;*/
+width:790px;
+}
+.wrapper {
+	padding:10px;
+	background: #fff;
+}
+
+#method-container .wrapper {
+	border-top: 5px solid #ee1c24; 
+}
+
+#method-container .wrapper ul{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+#method-container .wrapper ul li{
+	border-bottom: 1px solid #CCC;
+	height: 29px;
+	display: block;
+}
+
+#method-container a{
+	color: #333;
+	text-decoration: none;
+	display: block;
+	padding-top: 5px;
+	padding-left: 5px;
+	height: 24px;
+}
+
+#method-container a:hover {
+	background: #ee1c24;
+	color: #fff;
+}
+	
+
+#output{
+	clear:both;
+	padding-top:10px;
+}
+
+#method-output .wrapper {
+	border-top: 5px solid #000; 
+}
+
+.key {
+	border-bottom: 1px dotted #CCC;
+}
+
+.content {
+	padding-top: 20px;
+}
+
+.submit {
+	background: #ee1c24;
+	padding: 5px;
+	color: #fff;
+	-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border: 1px solid #ee1c24;
+}
+
+.clear_output {
+	background: #999;
+	padding: 5px;
+	color: #fff;
+	-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border: 1px solid #999;
+}
+
+small {
+	font-style:italic;
+	color:#666;
+}
+
+#right_column {
+	display:none;
+	float:left;
+	width: 230px;
+}
+
+.promo {
+	background: #fff;
+	padding: 5px;
+	margin-bottom: 10px;
+}
