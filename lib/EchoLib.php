@@ -64,8 +64,26 @@ class EchoLib {
 	* Search API Method
 	* http://wiki.js-kit.com/API-Method-search
 	*/
-	function method_search($query) {
-		$rsp = $this->http(self::$API_URL_SEARCH . '?q=' . $query , '&appkey=' . $this->consumer_key, null);
+	function method_search($query, $since) {
+		$rsp = $this->http(self::$API_URL_SEARCH . '?q=' . $query , '&appkey=' . $this->consumer_key . '&since=' . $since, null);
+		return $rsp;
+	}
+
+	/**
+	* Count API Method
+	* http://wiki.aboutecho.com/w/page/27888212/API-method-count
+	*/
+	function method_count($query) {
+		$rsp = $this->http('http://api.echoenabled.com/v1/count'. '?q=' . $query , '&appkey=' . $this->consumer_key, null);
+		return $rsp;
+	}
+
+	/**
+	* Mux Item API Method
+	* http://wiki.aboutecho.com/w/page/32433803/API-method-mux
+	*/
+	function method_mux($requests) {
+		$rsp = $this->http('http://api.echoenabled.com/v1/mux'. '?requests=' . $requests , '&appkey=' . $this->consumer_key, null);
 		return $rsp;
 	}
 	
@@ -102,6 +120,40 @@ class EchoLib {
 		$rsp = $to->OAuthRequest(self::$API_URL_UNREGISTER, array('url'=>$url), 'POST');
 		$this->last_api_call = $to->lastAPICall();
 		$this->http_status = $to->lastStatusCode();
+		return $rsp;
+	}
+
+	/**
+	* User Get API Method
+	* http://wiki.aboutecho.com/w/page/35104884/API-method-users-get
+	*/
+	function method_user_get($identityURL) {
+		$to = new EchoOAuth($this->consumer_key, $this->consumer_secret);
+		$rsp = $to->OAuthRequest('http://api.echoenabled.com/v1/users/get', array('identityURL'=>$identityURL), 'GET');
+		$this->last_api_call = $to->lastAPICall();
+		$this->http_status = $to->lastStatusCode();
+		return $rsp;
+	}
+
+	/**
+	* User Update API Method
+	* http://wiki.aboutecho.com/w/page/35060726/API-method-users-update
+	*/
+	function method_user_update($identityURL=null, $subject, $content) {
+		$to = new EchoOAuth($this->consumer_key, $this->consumer_secret);
+		$rsp = $to->OAuthRequest('http://api.echoenabled.com/v1/users/update=', array('identityURL'=>$identityURL,'subject'=>$subject,'content'=>$content), 'POST');
+		$this->last_api_call = $to->lastAPICall();
+		$this->http_status = $to->lastStatusCode();
+		return $rsp;
+	}
+
+	/**
+	* User whoami API Method
+	* http://wiki.aboutecho.com/w/page/35485894/API-method-users-whoami
+	*/
+	function method_user_whoami($sessionID) {
+		$rsp = $this->http('http://api.echoenabled.com/v1/users/whoami'
+			. '?sessionID=' . $sessionID , '&appkey=' . $this->consumer_key, null);
 		return $rsp;
 	}
 	

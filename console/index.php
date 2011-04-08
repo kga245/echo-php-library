@@ -15,6 +15,10 @@ $query = ($_POST['query'] ? $_POST['query'] : null);
 $url = ($_POST['field-url'] ? $_POST['field-url'] : null);
 $interval = ($_POST['interval'] ? $_POST['interval'] : null);
 
+function getRequest($key) {
+	return ($_REQUEST[$key] ? $_REQUEST[$key] : null);
+}
+
 // declare vars
 $rsp = '';
 
@@ -28,7 +32,13 @@ if($method) {
 			$rsp = $EchoLib->method_submit($content);
 		break;
 		case 'search':
-			$rsp = $EchoLib->method_search($query);
+			$rsp = $EchoLib->method_search(getRequest('query'), getRequest('since'));
+		break;
+		case 'count':
+			$rsp = $EchoLib->method_count(getRequest('query2'));
+		break;
+		case 'mux':
+			$rsp = $EchoLib->method_mux(getRequest('requests'));
 		break;
 		case 'list':
 			$rsp = $EchoLib->method_list();
@@ -37,7 +47,16 @@ if($method) {
 			$rsp = $EchoLib->method_register($url, $interval);
 		break;
 		case 'unregister':
-			$rsp = $EchoLib->method_unregister($url);
+			$rsp = $EchoLib->method_unregister(getRequest('url2'));
+		break;
+		case 'userget':
+			$rsp = $EchoLib->method_user_get(getRequest('identityURL'));
+		break;
+		case 'userupdate':
+			$rsp = $EchoLib->method_user_update(getRequest('identityURL2'), getRequest('subject'), getRequest('content2'));
+		break;
+		case 'userwhoami':
+			$rsp = $EchoLib->method_user_whoami(getRequest('sessionID'));
 		break;
 	}
 	// get api call info
@@ -65,6 +84,8 @@ $(document).ready(function() {
 		$("#form-field-method").attr("value", rel);
 		//
 		$("#buttons").show();
+		//
+		$('#output').remove();
 	});
 });
 </script>
@@ -74,14 +95,8 @@ $(document).ready(function() {
 
 <body>
 
-<div class="container">
-<div class="header"><a href="http://3ones.com" class="contact_link">need product development?</a></div>
-</div>
-
-
 <div class="container title">
-<img src="http://s3.amazonaws.com/satisfaction-production/public/uploaded_images/3481715/logo---horizontal-small---updated_full_aspect_medium.png" style="float:right;height:50px;margin-top:-15px;" />
-  <h1>JS-Kit Echo Platform Console</h1></div>
+  <h1>RealTidBits Echo Platform Console</h1></div>
 
 <div class="page">
 
@@ -90,12 +105,16 @@ $(document).ready(function() {
 	<div class="wrapper">
         <h3>Methods</h3>
         <ul>
-            <li><a href="javascript:void(0);" rel="submit">Submit</a></li>
-            <li><a href="javascript:void(0);" rel="search">Search</a></li>
-            <li><a href="javascript:void(0);" rel="list">List</a></li>
-
-            <li><a href="javascript:void(0);" rel="register">Register</a></li>
-            <li><a href="javascript:void(0);" rel="unregister">Unregister</a></li>
+            <li><a href="javascript:void(0);" rel="submit">Item - Submit</a></li>
+            <li><a href="javascript:void(0);" rel="search">Item - Search</a></li>
+            <li><a href="javascript:void(0);" rel="count">Item - Count</a></li>
+            <li><a href="javascript:void(0);" rel="mux">Item - MUX</a></li>
+            <li><a href="javascript:void(0);" rel="list">Feeds - List</a></li>
+            <li><a href="javascript:void(0);" rel="register">Feeds - Register</a></li>
+            <li><a href="javascript:void(0);" rel="unregister">Feeds - Unregister</a></li>
+            <li><a href="javascript:void(0);" rel="userget">User - Get</a></li>
+            <li><a href="javascript:void(0);" rel="userupdate">User - Update</a></li>
+            <li><a href="javascript:void(0);" rel="userwhoami">User - WhoAmI</a></li>
         </ul>
     </div>
 </div>
@@ -119,14 +138,40 @@ $(document).ready(function() {
         <textarea name="content" rows="10" style="width:95%;"><?php echo $content; ?></textarea>
         <br /> <small>URL-encoded Activity Streams XML with one or more activity entries</small>
     </div>
+<!-- -->
     <div id="method-search" class="forms-hidden" style="<?php if($method != 'search') { echo 'display:none;'; } ?>">
     <h3>API Method - search</h3>
 		<p>Returns items that match a specified query in Activity Stream format. <a href="http://wiki.js-kit.com/API-Method-search">Documentation.</a></p>
     
         Query: <br/>
-        <input type="text" name="query" value="<?php echo $query; ?>" style="width:500px;" />
+        <input type="text" name="query" value="<?php echo getRequest('query'); ?>" style="width:500px;" />
         <br/> <small> Specify a search query, ex: "scope:http://js-kit.com/"</small>
+        <br/>
+        Since: <br/>
+        <input type="text" name="since" value="<?php echo getRequest('since'); ?>" style="width:100px;" />
+        <br />
     </div>
+<!-- -->
+<!-- -->
+    <div id="method-count" class="forms-hidden" style="<?php if($method != 'count') { echo 'display:none;'; } ?>">
+    <h3>API Method - Count</h3>
+		<p>Returns a number of items that match the specified query in JSON format. <a href="http://wiki.aboutecho.com/w/page/27888212/API-method-count">Documentation.</a></p>
+    
+        Query: <br/>
+        <input type="text" name="query2" value="<?php echo getRequest('query2'); ?>" style="width:500px;" />
+        <br/><small> Specify a search query, ex: "scope:http://js-kit.com/"</small><br/>
+    </div>
+<!-- -->
+<!-- -->
+    <div id="method-mux" class="forms-hidden" style="<?php if($method != 'mux') { echo 'display:none;'; } ?>">
+    <h3>API Method - MUX</h3>
+		<p>The API method "mux" allows to "multiplex" requests, i.e. use a single API call to "wrap" several requests. The multiplexed requests are executed concurrently and independently by the Echo server. <a href="http://wiki.aboutecho.com/w/page/32433803/API-method-mux">Documentation.</a></p>
+    
+        Requests: <br/>
+        <input type="text" name="requests" value="<?php echo getRequest('requests'); ?>" style="width:500px;" />
+        <br/> <small>URL-encoded JSON structure detailing the API calls to be multiplexed.</small><br/>
+    </div>
+<!-- -->
     <div id="method-list" class="forms-hidden" style="<?php if($method != 'list') { echo 'display:none;'; } ?>">
     <h3>API Method - feeds/list</h3>
 <p>Echo Platform allows you to register Activity Stream feeds with the system. We will then agressively poll those feeds looking for new data. This method returns a list of registered feeds for specified API key. <a href="http://wiki.js-kit.com/API-Method-feeds-list">Documentation.</a></p>
@@ -150,10 +195,49 @@ $(document).ready(function() {
 		<p>Echo Platform allows you to register Activity Stream feeds with the system. We will then agressively poll those feeds looking for new data. This method unregisters an Activity Stream feed by URL. <a href="http://wiki.js-kit.com/API-Method-feeds-unregister">Documentation.</a></p>
         <p>
         	Url: <br/>
-        	<input type="text" name="field-url" value="<?php echo $query; ?>" style="width:500px;" />
+        	<input type="text" name="url2" value="<?php echo $url2; ?>" style="width:500px;" />
         	<br /> <small>URL of page with feed in Activity Streams XML format</small>
         </p>
     </div>
+<!-- -->
+    <div id="method-userget" class="forms-hidden" style="<?php if($method != 'userget') { echo 'display:none;'; } ?>">
+    <h3>API Method - User Get</h3>
+		<p>Endpoint for fetching user information. <a href="http://wiki.aboutecho.com/w/page/35104884/API-method-users-get">Documentation.</a></p>
+    
+        identityURL: <br/>
+        <input type="text" name="identityURL" value="<?php echo getRequest('identityURL'); ?>" style="width:500px;" />
+        <br/><small>User identity URL</small><br/>
+    </div>
+<!-- -->
+<!-- -->
+    <div id="method-userupdate" class="forms-hidden" style="<?php if($method != 'userupdate') { echo 'display:none;'; } ?>">
+    <h3>API Method - User Update</h3>
+		<p>Endpoint for updating user information. <a href="http://wiki.aboutecho.com/w/page/35060726/API-method-users-update">Documentation.</a></p>
+    
+        identityURL: <br/>
+        <input type="text" name="identityURL2" value="<?php echo getRequest('identityURL2'); ?>" style="width:500px;" />
+        <br/><small>User identity URL</small><br/>
+        subject: <br/>
+        <input type="text" name="subject" value="<?php echo getRequest('subject'); ?>" style="width:500px;" />
+        <br/><small>Shows which user parameter should be updated.</small><br/>
+        content: <br/>
+        <textarea name="content2" rows="10" style="width:95%;"><?php echo getRequest('content2'); ?></textarea>
+        <br/><small>Contains data to be used for the user update.</small><br/>
+    </div>
+<!-- -->
+<!-- -->
+    <div id="method-userwhoami" class="forms-hidden" style="<?php if($method != 'userwhoami') { echo 'display:none;'; } ?>">
+    <h3>API Method - User WhoAmI</h3>
+		<p>Endpoint for retrieving currently logged in user information by session ID, which equals to Backplane channel ID for this user. <a href="http://wiki.aboutecho.com/w/page/35485894/API-method-users-whoami">Documentation.</a></p>
+    
+        sessionID: <br/>
+        <input type="text" name="sessionID" value="<?php echo getRequest('sessionID'); ?>" style="width:500px;" />
+        <br/><small>Backplane channel ID, which is the user session ID at the same time.</small><br/>
+    </div>
+<!-- -->
+    
+    
+    
 </div>
 
    <br />
