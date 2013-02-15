@@ -63,9 +63,16 @@ class EchoLib {
 	/**
 	* Search API Method
 	* http://wiki.js-kit.com/API-Method-search
+	* $since is now an optional parameter
+	* and we need to protect $query with urlencode
 	*/
-	function method_search($query, $since) {
-		$rsp = $this->http(self::$API_URL_SEARCH . '?q=' . $query , '&appkey=' . $this->consumer_key . '&since=' . $since, null);
+	function method_search($query, $since = "") {
+		if(empty($since)){
+			$psince = "";
+		}else{
+			$psince =  '&since=' . $since;
+		}
+		$rsp = $this->http(self::$API_URL_SEARCH . '?q=' . urlencode($query) , '&appkey=' . $this->consumer_key. $psince , null);
 		return $rsp;
 	}
 
